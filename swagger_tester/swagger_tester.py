@@ -88,8 +88,11 @@ def validate_definition(swagger_parser, valid_response, response):
         # Check if there is a definition that match body and response
         valid_definition = swagger_parser.get_dict_definition(valid_response, get_list=True)
         actual_definition = swagger_parser.get_dict_definition(response, get_list=True)
-        assert len(set(valid_definition).intersection(actual_definition)) >= 1
+        assert len(set(valid_definition).intersection(actual_definition)) >= 1, json_diff(response, valid_response)
 
+def json_diff (actual_definition, valid_definition):
+    ret = 'Excpected: \n===\n' + json.dumps(valid_definition, indent=4, sort_keys=True) + '\nGot\n===\n' + json.dumps(actual_definition, indent=4, sort_keys=True)
+    return ret
 
 def parse_parameters(url, action, path, request_args, swagger_parser):
     """Parse the swagger parameters to make a request.
